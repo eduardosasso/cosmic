@@ -11,16 +11,18 @@ const port = argv.port || 3306;
 
 net
   .createServer((so) => {
-    let server = new FMS({
+    new FMS({
       socket: so,
       banner: "Cosmic",
       onAuthorize: handleAuthorize,
       onCommand: handleCommand,
     });
+
+    so.on("error", (err) => {
+      console.error(err);
+    });
   })
   .listen(port);
-
-// // fetch COSMOS_KEY from environment variables
 
 const regex = /AccountEndpoint=(.*);AccountKey=(.*);/i;
 const matches = cosmosKey.match(regex);
@@ -58,15 +60,10 @@ function handleCommand({ command, extra }) {
 let container = null;
 
 function handleQuery(query) {
-  // Take the query, print it out
-  console.log("Got Query: " + query);
+  console.log(query);
 
-  //match query that has USE in caps and something.something"
-  // it should match what is in inside of `` in USE `assets.asset`
   const useRegex = /^use\s+`([a-zA-Z0-9]+)\.([a-zA-Z0-9]+)`/i;
 
-  // const useRegex = /^use\s+[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)?/i;
-  //check regex and if match create two vars one database and one called container spiliting on the .
   const isSelectingDatabase = useRegex.test(query);
   if (isSelectingDatabase) {
     const matches = query.match(useRegex);
@@ -76,8 +73,6 @@ function handleQuery(query) {
     container = cosmos.database(database).container(table);
   }
 
-  // check if query starts with select and has a from clause that has c as table name using regex
-  // remove new lines in the query
   const singleLineQuery = query.replace(/\r?\n|\r/g, " ");
 
   const regex = /^select.*from\s+c\b/i;
@@ -89,7 +84,6 @@ function handleQuery(query) {
     return;
   }
 
-  // const container = cosmos.database("asset").container("assets");
   const querySpec = { query: singleLineQuery };
 
   const definitions = [];

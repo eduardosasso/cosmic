@@ -90,30 +90,17 @@ export default class Server {
       len = writeLengthCodedString(payload, len, definition["default"]);
       this.writeHeader(payload, len);
       this.sendPacket(payload.slice(0, len));
-      //console.log(definition);
-      //console.log(payload.slice(4,len));
     }
 
     this.sendEOF();
   }
 
   sendRow(row) {
-    // Initial length for the header
-    let totalLength = 4;
+    let totalLength = 512;
+    let combinedString = row.join(""); // This concatenates all array elements into a single string
+    totalLength += Buffer.byteLength(combinedString, "utf-8");
 
-    // Calculate the buffer length needed for each cell in the row
-    for (let cell of row) {
-      if (cell == null) {
-        totalLength += 1; // Length for null cell representation
-      } else {
-        // Length for the cell data, update this logic as needed
-        totalLength += Buffer.byteLength(cell, 'utf-8') + 512;
-      }
-    }
-
-    // Allocate buffer with the calculated size
     let payload = Buffer.alloc(totalLength);
-    // let payload = Buffer.alloc(42048);
     let len = 4;
     for (let cell of row) {
       if (cell == null) {

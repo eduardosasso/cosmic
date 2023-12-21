@@ -80,7 +80,7 @@ function handleQuery(query) {
   // remove new lines in the query
   const singleLineQuery = query.replace(/\r?\n|\r/g, " ");
 
-  const regex = /^select.*from.*c/i;
+  const regex = /^select.*from\s+c\b/i;
   const isUserQuery = regex.test(singleLineQuery);
 
   if (!isUserQuery || !container) {

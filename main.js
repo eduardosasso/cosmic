@@ -29,7 +29,7 @@ const matches = cosmosKey.match(regex);
 const endpoint = matches[1];
 const key = matches[2];
 
-const cosmos = new CosmosClient({ endpoint, key });
+let cosmos = new CosmosClient({ endpoint, key });
 
 function handleAuthorize(param) {
   return true;
@@ -58,17 +58,34 @@ function handleCommand({ command, extra }) {
 }
 
 let container = null;
+let database = null;
+let table = null;
 
 function handleQuery(query) {
   console.log(query);
 
   const useRegex = /^use\s+`([a-zA-Z0-9]+)\.([a-zA-Z0-9]+)`/i;
 
+  //create regex that matches kill query string
+  const killRegex = /^kill\s+query\s+(\d+)/i;
+  
+  //check if query is kill query
+  const isKillQuery = killRegex.test(query);
+  if (isKillQuery) {
+    cosmos = new CosmosClient({ endpoint, key });
+    //throw js exception to kill query
+    // throw "Query was killed";
+
+    this.sendError({ message: "Query was killed" });
+
+    return;
+  }
+
   const isSelectingDatabase = useRegex.test(query);
   if (isSelectingDatabase) {
     const matches = query.match(useRegex);
-    const database = matches[1];
-    const table = matches[2];
+    database = matches[1];
+    table = matches[2];
 
     container = cosmos.database(database).container(table);
   }

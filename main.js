@@ -121,15 +121,26 @@ function handleQuery(query) {
     .then((result) => {
       if (!isTableFlag) {
         const data = JSON.stringify(result.resources);
+        const stats = {
+          requestCharge: result.requestCharge,
+          hasMoreResults: result.hasMoreResults,
+          indexMetrics: result.indexMetrics,
+          requestDurationInMs: result.diagnostics.clientSideRequestStatistics.requestDurationInMs,
+          totalResponsePayloadLengthInBytes: result.diagnostics.clientSideRequestStatistics.totalResponsePayloadLengthInBytes
+        }
 
         this.sendDefinitions([
           this.newDefinition({
-            name: "result",
+            name: "data",
+            columnType: consts.MYSQL_TYPE_LONG_BLOB,
+          }),
+          this.newDefinition({
+            name: "stats",
             columnType: consts.MYSQL_TYPE_LONG_BLOB,
           }),
         ]);
 
-        this.sendRows([[data]]);
+        this.sendRows([[data, JSON.stringify(stats)]]);
 
         return;
       }

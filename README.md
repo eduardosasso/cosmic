@@ -21,7 +21,7 @@ node main.js "--cosmos=AccountEndpoint=https://{{cosmos url}}:443/;AccountKey={{
 ```
 
 ## Usage
-Use `localhost` or `127.0.0.1` as the host to connect. In the database field, use `database-name.container` to select which container to use in Cosmos. 
+Use `localhost` or `127.0.0.1` as the host to connect. In the database field, use `database-name.container` to select which container to use in Cosmos. No username or password required.
 
 Run SQL queries using cosmos syntax and any supported functions e.g.
 ```

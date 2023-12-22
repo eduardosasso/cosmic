@@ -81,6 +81,14 @@ function handleQuery(query) {
     return;
   }
 
+  //using regex match the --table with maybe one space after -- and nothing after table
+  const tableRegex = /--\s*table/i;
+
+  //check if query is table query
+  const isTableFlag = tableRegex.test(query);
+  //remove --table flag from query
+  query = query.replace(tableRegex, "");
+
   const isSelectingDatabase = useRegex.test(query);
   if (isSelectingDatabase) {
     const matches = query.match(useRegex);
@@ -90,9 +98,10 @@ function handleQuery(query) {
     container = cosmos.database(database).container(table);
   }
 
-  const singleLineQuery = query.replace(/\r?\n|\r/g, " ");
+  const singleLineQuery = query.replace(/\r?\n|\r/g, " ").trim();
+  // santize query no spaces or new lines left or right
 
-  const regex = /^select.*from\s+c\b/i;
+  const regex = /^(?:\s|\n)*select.*from\s+c\b/i;
   const isUserQuery = regex.test(singleLineQuery);
 
   if (!isUserQuery || !container) {
@@ -110,6 +119,21 @@ function handleQuery(query) {
     .query(querySpec)
     .fetchAll()
     .then((result) => {
+      if (!isTableFlag) {
+        const data = JSON.stringify(result.resources);
+
+        this.sendDefinitions([
+          this.newDefinition({
+            name: "result",
+            columnType: consts.MYSQL_TYPE_LONG_BLOB,
+          }),
+        ]);
+
+        this.sendRows([[data]]);
+
+        return;
+      }
+
       for (let i = 0; i < result.resources.length; i++) {
         const item = result.resources[i];
 

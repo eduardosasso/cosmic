@@ -23,7 +23,7 @@ node main.js "--cosmos=AccountEndpoint=https://{{cosmos url}}:443/;AccountKey={{
 ## Usage
 Use `localhost` or `127.0.0.1` as the host to connect. In the database field, use `database-name.container` to select which container to use in Cosmos. No username or password required.
 
-Run SQL queries using Cosmos syntax and any supported functions e.g.
+Run SQL queries using **Cosmos** syntax and any supported functions e.g.
 ```
 select top 10 c.id from c
 ```
@@ -40,7 +40,7 @@ We have tested Cosmic in the following clients:
 ## Features
 Cosmic supports two operating modes, `JSON` and table format.  
 
-The default JSON format returns query results as they are. When you use the `-- table` flag, the system returns results in a tabulated format, like a relational database using root-level keys as columns. e.g.
+The default `JSON` format returns query results as they are. When you use the `-- table` flag, the system returns results in a tabulated format, like a relational database using root-level keys as columns. e.g.
 
 ```
 -- table

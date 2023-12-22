@@ -51,4 +51,4 @@ select * from c where c.id='123'
 This is a proof of concept and has only been tested in Cosmos DB using the default **SQL (Core) API** mode.
 
 ## Credits
-This project makes use of [faux-mysql-server](https://github.com/CloudQuote/faux-mysql-server), which is an open-source project under the GNU General Public License. 
+This project makes use of [faux-mysql-server](https://github.com/CloudQuote/faux-mysql-server), which is an open-source project under the GPL license. 

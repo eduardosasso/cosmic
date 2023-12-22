@@ -17,7 +17,7 @@ npm install
 In Azure portal, go to the Cosmos DB account to get the endpoint of the database to connect.
 
 ```
-node main.js "--cosmos=AccountEndpoint=https://<cosmos url>:443/;AccountKey=<key>;" --port 3306
+node main.js "--cosmos=AccountEndpoint=https://{{cosmos url}}:443/;AccountKey={{key}};" --port 3306
 ```
 
 ## Usage
@@ -32,7 +32,7 @@ We have tested Cosmic in the following clients:
 
 * [MySQL Cli](https://dev.mysql.com/doc/refman/8.0/en/mysql.html)
   * ```
-    mysql -h 127.0.0.1 -P 3306 -D database.container
+    mysql -h 127.0.0.1 -P 3306 -D {{database.container}}
     ```
 * [Table Plus](https://tableplus.com)
 * [Sequel Ace](https://sequel-ace.com)
